@@ -1,0 +1,27 @@
+async function tampilkanBuku() {
+  const res = await fetch('data/buku.json');
+  const data = await res.json();
+  const container = document.getElementById('daftar-buku');
+  const searchInput = document.getElementById('search');
+
+  function render(bukuList) {
+    container.innerHTML = bukuList.map(buku => `
+      <div class="card">
+        <h3>${buku.judul}</h3>
+        <p>Penulis: ${buku.penulis}</p>
+        <p>Tahun: ${buku.tahun}</p>
+        <p><b>${buku.tersedia ? "Tersedia ✅" : "Dipinjam ❌"}</b></p>
+      </div>
+    `).join('');
+  }
+
+  render(data);
+
+  searchInput.addEventListener('input', e => {
+    const keyword = e.target.value.toLowerCase();
+    const hasil = data.filter(b => b.judul.toLowerCase().includes(keyword));
+    render(hasil);
+  });
+}
+
+tampilkanBuku();
