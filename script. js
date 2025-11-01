@@ -4,23 +4,49 @@ async function tampilkanBuku() {
   const container = document.getElementById('daftar-buku');
   const searchInput = document.getElementById('search');
 
-  function render(bukuList) {
-    container.innerHTML = bukuList.map(buku => `
-      <div class="card">
-        <h3>${buku.judul}</h3>
-        <p>Penulis: ${buku.penulis}</p>
-        <p>Tahun: ${buku.tahun}</p>
+  // Fungsi render buku
+  function render(bukuList, keyword = '') {
+    container.innerHTML = '';
+
+    if (bukuList.length === 0) {
+      container.innerHTML = <p style="color:#888;">❌ Buku tidak ditemukan</p>;
+      return;
+    }
+
+    bukuList.forEach(buku => {
+      const judul = highlightText(buku.judul, keyword);
+      const penulis = highlightText(buku.penulis, keyword);
+
+      const card = document.createElement('div');
+      card.className = 'card animate';
+      card.innerHTML = `
+        <h3>${judul}</h3>
+        <p>✍️ Penulis: ${penulis}</p>
+        <p>📅 Tahun: ${buku.tahun}</p>
         <p><b>${buku.tersedia ? "Tersedia ✅" : "Dipinjam ❌"}</b></p>
-      </div>
-    `).join('');
+      `;
+      container.appendChild(card);
+    });
   }
 
+  // Fungsi untuk menyorot teks yang dicari
+  function highlightText(text, keyword) {
+    if (!keyword) return text;
+    const regex = new RegExp((${keyword}), 'gi');
+    return text.replace(regex, <mark>$1</mark>);
+  }
+
+  // Render awal
   render(data);
 
+  // Event pencarian real-time
   searchInput.addEventListener('input', e => {
-    const keyword = e.target.value.toLowerCase();
-    const hasil = data.filter(b => b.judul.toLowerCase().includes(keyword));
-    render(hasil);
+    const keyword = e.target.value.trim().toLowerCase();
+    const hasil = data.filter(b =>
+      b.judul.toLowerCase().includes(keyword) ||
+      b.penulis.toLowerCase().includes(keyword)
+    );
+    render(hasil, keyword);
   });
 }
 
