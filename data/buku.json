@@ -1,0 +1,14 @@
+[
+  {
+    "judul": "Laskar Pelangi",
+    "penulis": "Andrea Hirata",
+    "tahun": 2005,
+    "tersedia": true
+  },
+  {
+    "judul": "Bumi Manusia",
+    "penulis": "Pramoedya Ananta Toer",
+    "tahun": 1980,
+    "tersedia": false
+  }
+]
